@@ -10,3 +10,6 @@ Trapster audio player is a HTML5 based audio player
 * Persistent playlist - save your playlist and stop wasting time importing everytime your favorite music
 * Remote control - entirely control player remotely from your smartphone
 * Color changer - change the look and feel of the Trapster Audio Player
+
+# Note #
+The app is still in development and may contain bugs
