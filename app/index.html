@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html ng-app="audioPlayer">
+<head>
+	<title>Audio player</title>
+	<link rel="stylesheet" type="text/css" href="stylesheets/main.css">
+	<link rel="stylesheet" type="text/css" href="stylesheets/player.css">
+	<link rel="stylesheet" type="text/css" href="stylesheets/playlist.css">
+	<link rel="stylesheet" type="text/css" href="stylesheets/toolbar.css">
+	<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="http://cdn.peerjs.com/0.3/peer.js"></script>
+	<script src="script/peer.js"></script>
+</head>
+<body ng-controller="AudioPlayerController">
+	<div class="player">
+		<div class="controls">
+			<img src="media/buttons/prev.png" id="prev">
+			<img src="media/buttons/play.png" id="play">
+			<img src="media/buttons/pause.png" class="hide" id="pause">
+			<img src="media/buttons/next.png" id="next">
+		</div>
+		<div class="seek-bar">
+			<input id="audio-seek" name="slider" type="range" value="0" max="0" />
+		</div>
+		<div class="sound">
+			<img src="media/buttons/volume-down.png" id="volDown">
+			<img src="media/buttons/volume-up.png" id="volUp">
+			<img src="media/buttons/add.png" id="getMusic" >
+		</div>
+	</div>
+	<div class="playlist">
+		<ul>
+			<!-- <li data-index="no-index">
+				<span class="title">No song in playlist</span>
+			</li> -->
+			<h2>No song in playlist</h2>
+		</ul>
+	</div>
+	<div class="toolbar">
+		<!-- <div class="controls left">
+			<img src="media/buttons/repeat-all.png" id="repeatAll"/>
+			<img src="media/buttons/repeat-track.png" class="hide" id="repeatTrack"/>
+			<img src="media/buttons/shuffle.png" class="" id="shuffle"/>
+		</div>
+		<div class="controls right">
+			<img src="media/buttons/settings.png" id="settings" /> 
+			<img src="media/buttons/dev-tools.png" id="devTools" /> 
+		</div> -->
+	</div>
+
+	<input type="file" id="fileList" multiple accept=".mp3">
+
+	<script type="text/javascript" src="script/app.js"></script>
+
+</body>
+</html>
