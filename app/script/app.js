@@ -45,11 +45,17 @@ var main = function() {
 			name: '',
 			index: 0,
 			path: '',
-			volume: 1, 
+			volume: 0.1, 
 			loop: false,
-			shuffle: true
+			shuffle: false
 		},
 		audio = new Audio();
+
+	// Current song title
+	var currentSongTitle = function() {
+		$('.song-title h3').text(currentSong.name);
+		win.title = 'Trapster' + ' - ' + currentSong.name;
+	};
 
 	// Shuffle play
 	var shuffle = function(index) {
@@ -74,6 +80,7 @@ var main = function() {
 	$('#shuffle').click(function() { shuffleChange(); })
 
 	// Setting player settings from the currentSong object
+	$('#volume-control').val(currentSong.volume);
 	audio.volume = currentSong.volume;
 	audio.loop = currentSong.loop;
 	if(currentSong.loop) {
@@ -156,6 +163,7 @@ var main = function() {
 		currentSong.name = musicList[index].name;
 		currentSong.path = musicList[index].path;
 		
+		currentSongTitle();
 		notificationsSettings('display', "Playing " + currentSong.name);
 		audio.play();
 
@@ -164,21 +172,11 @@ var main = function() {
 	});
 
 	// Volume control
-	var playerVolUp = function() {
-		if(audio.volume < 1) {
-			audio.volume += 0.1;
-			currentSong.volume = audio.volume;
-		}
-	};
-	volUpBtn.click(function() { playerVolUp(); });
-
-	var playerVolDown = function() {
-		if(audio.volume > 0) {
-			audio.volume -= 0.1;
-			currentSong.volume = audio.volume;
-		}
-	};
-	volDownBtn.click(function(e) { playerVolDown(); });
+	$('#volume-control').on('change', function() {
+		var volume = $('#volume-control').val() / 100;
+		currentSong.volume = volume;
+		audio.volume = volume;
+	});
 
 	// Play control
 	var playerPlay = function() {
@@ -195,6 +193,7 @@ var main = function() {
 			audio.src = musicList[0].path;
 		}
 
+		currentSongTitle();
 		notificationsSettings('display', "Playing " + currentSong.name);
 
 		audio.play();
@@ -231,6 +230,7 @@ var main = function() {
 		$('.playlist ul li').removeClass('active');
 		$('[data-index="'+prevIndex+'"]').addClass('active');
 
+		currentSongTitle();
 		notificationsSettings('display', "Playing " + currentSong.name);
 
 		audio.play();
@@ -256,6 +256,7 @@ var main = function() {
 		$('.playlist ul li').removeClass('active');
 		$('[data-index="'+nextIndex+'"]').addClass('active');
 
+		currentSongTitle();
 		notificationsSettings('display', "Playing " + currentSong.name);
 
 		audio.play();

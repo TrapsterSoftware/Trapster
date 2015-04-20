@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="audioPlayer">
 <head>
-	<title>Audio player</title>
+	<title>Trapster</title>
 	<link rel="stylesheet" type="text/css" href="stylesheets/main.css">
 	<link rel="stylesheet" type="text/css" href="stylesheets/player.css">
 	<link rel="stylesheet" type="text/css" href="stylesheets/playlist.css">
@@ -12,19 +12,24 @@
 </head>
 <body ng-controller="AudioPlayerController">
 	<div class="player">
-		<div class="controls">
-			<img src="media/buttons/prev.png" id="prev">
-			<img src="media/buttons/play.png" id="play">
-			<img src="media/buttons/pause.png" class="hide" id="pause">
-			<img src="media/buttons/next.png" id="next">
+		<div class="container">
+			<div class="controls">
+				<img src="media/buttons/prev.png" id="prev">
+				<img src="media/buttons/play.png" id="play">
+				<img src="media/buttons/pause.png" class="hide" id="pause">
+				<img src="media/buttons/next.png" id="next">
+			</div>
+			<div class="song-title">
+				<h3>No song currently playing</h3>
+			</div>
+			<div class="sound">
+				<!-- <img src="media/buttons/volume-down.png" id="volDown">
+				<img src="media/buttons/volume-up.png" id="volUp"> -->
+				<input type="range" id="volume-control" class="volume-control" value="100" min="0" max="100" />
+			</div>
 		</div>
-		<div class="seek-bar">
-			<input id="audio-seek" name="slider" type="range" value="0" max="0" />
-		</div>
-		<div class="sound">
-			<img src="media/buttons/volume-down.png" id="volDown">
-			<img src="media/buttons/volume-up.png" id="volUp">
-			<img src="media/buttons/add.png" id="getMusic" >
+		<div class="seek">
+			<input id="audio-seek" class="seekbar" name="slider" type="range" value="0" max="0" />
 		</div>
 	</div>
 	<div class="playlist">
@@ -41,6 +46,7 @@
 	</div>
 	<div class="toolbar">
 		<div class="controls left">
+			<img src="media/buttons/add.png" id="getMusic" >
 			<img src="media/buttons/repeat-all.png" id="repeatAll"/>
 			<img src="media/buttons/repeat-track.png" class="hide" id="repeatTrack"/>
 			<img src="media/buttons/shuffle.png" class="" id="shuffle"/>
@@ -76,7 +82,6 @@
 	<input type="file" id="fileList" multiple accept=".mp3">
 
 	<script type="text/javascript" src="script/app.js"></script>
-	<!-- // <script type="text/javascript" src="script/live-reload.js"></script> -->
 
 </body>
 </html>
