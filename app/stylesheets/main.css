@@ -14,4 +14,85 @@ body {
 }
 
 input[type=file] {display: none;}
-.hide {display: none;}
+.hide { display: none; }
+
+.modal-settings {
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	position: absolute;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+.modal-settings .dialog {
+	width: 600px;
+	height: 450px;
+	margin: 25px auto;
+	background-color: #E0E0E0;
+}
+
+.modal-settings .dialog .title {
+	width: 100%;
+	height: 10%;
+	padding: 10px;
+	color: #009688;
+	border-bottom: 1px solid #009688;
+}
+
+.modal-settings .dialog .content {
+	width: 100%;
+	height: 80%;
+	padding: 10px;
+	overflow-y: scroll;
+}
+.modal-settings .dialog .content table {
+	width: 100%;
+	height: auto;
+	text-align: left;
+	margin-top: 10px;
+	border-collapse: collapse;
+}
+.modal-settings .dialog .content table tr {
+	border-bottom: 1px solid #009688;
+}
+.modal-settings .dialog .content table th,
+.modal-settings .dialog .content table td {
+	padding: 5px;
+	font-size: 20px;
+}
+.modal-settings .dialog .content::-webkit-scrollbar {
+	width: 5px;
+	-webkit-appearance: none;
+}
+.modal-settings .dialog .content::-webkit-scrollbar-track {
+	width: 5px;
+	background-color: #2196F3;
+}
+.modal-settings .dialog .content::-webkit-scrollbar-thumb {
+	width: 5px;
+	border-radius: 5px;
+	background-color: #ffffff;
+}
+
+.modal-settings .dialog .actions {
+	width: 100%;
+	height: 10%;
+	overflow: hidden;
+	border-top: 1px solid #009688;
+}
+.modal-settings .dialog .actions button {
+	width: auto;
+	height: auto;
+	font-size: 18px;
+	padding: 5px;
+	margin: 5px 10px;
+	float: right;
+	cursor: pointer;
+	color: #ffffff;
+	box-shadow: 0 0 5px #ffffff;
+	border: 1px solid #ffffff;
+	background-color: #009688;
+}
+.modal-settings .dialog .actions button:focus {
+	outline: none;
+}

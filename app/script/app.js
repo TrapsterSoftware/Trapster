@@ -11,9 +11,25 @@ var main = function() {
 		win.showDevTools();
 	});
 
+	// $('#musicSearch').on('change', function(e) {
+	// 	console.log("Event: ", e);
+	// 	console.log($(this).val());
+	// });
+
 	// var tray = new gui.Tray({title: 'Trapster'});
 
-	var musicList = [],
+	// Control the options dialog
+	$('#settings').click(function() {
+		$('.modal-settings').removeClass('hide');
+	});
+	$('#settingsClose').click(function() {
+		$('.modal-settings').addClass('hide');
+	});
+
+	var appSettings = {
+			notifications: false
+		},
+		musicList = [],
 		audioSeek = $('#audio-seek'),
 		fileList = $('#fileList'),
 		playBtn = $('#play'),
@@ -23,21 +39,84 @@ var main = function() {
 		volUpBtn = $('#volUp'),
 		volDownBtn = $('#volDown'),
 		getMusicBtn = $('#getMusic'),
+		repeatAll = $('#repeatAll'),
+		repeatTrack = $('#repeatTrack'),
 		currentSong = {
 			name: '',
 			index: 0,
 			path: '',
-			volume: 1
+			volume: 1, 
+			loop: false,
+			shuffle: true
 		},
 		audio = new Audio();
 
-	// Setting player volume from the currentSong object
+	// Shuffle play
+	var shuffle = function(index) {
+		if(currentSong.shuffle === true) {
+			return Math.floor(Math.random() * (musicList.length - 0 + 1)) + 0;
+		} else {
+			return index;
+		}
+	};
+	var shuffleChange = function() {
+		if(currentSong.shuffle === true) {
+			// Stop shuffle
+			$('#shuffle').removeClass('active');
+			currentSong.shuffle = false;
+		} else {
+			// Turn on shuffle
+			$('#shuffle').addClass('active');
+			currentSong.shuffle = true;
+		}
+	};
+	if(currentSong.shuffle === true) { $('#shuffle').addClass('active'); }
+	$('#shuffle').click(function() { shuffleChange(); })
+
+	// Setting player settings from the currentSong object
 	audio.volume = currentSong.volume;
+	audio.loop = currentSong.loop;
+	if(currentSong.loop) {
+		repeatTrack.removeClass('hide');
+		repeatAll.addClass('hide');
+	} else {
+		repeatTrack.addClass('hide');
+		repeatAll.removeClass('hide');
+	}
+
+	// Notifications
+	var notificationsSettings = function(mode, text) {
+		var currSeting = appSettings.notifications;
+		if(mode === 'on' && currSeting === false) {
+			appSettings.notifications = true;
+		} else if(mode === 'off' && currSeting === true) {
+			appSettings.notifications = false;
+		} else { }
+		if(mode === 'display' && appSettings.notifications === true) {
+			var not = new Notification(text);
+		}
+	};
 
 	// Song duration
 	var songDuration = function() {
 		audioSeek.attr("max", parseInt(audio.duration, 10));
 	};
+
+	// Song loop
+	var songLoop = function(mode) {
+		if(mode === 'track') {
+			repeatAll.addClass('hide');
+			repeatTrack.removeClass('hide');
+			audio.loop = true;
+		} else {
+			repeatAll.removeClass('hide');
+			repeatTrack.addClass('hide');
+			audio.loop = false;
+		}
+		
+	};
+	repeatAll.click(function() { songLoop('track'); });
+	repeatTrack.click(function() { songLoop(); });
 
 	// Get music list
 	getMusicBtn.click(function() {
@@ -53,9 +132,11 @@ var main = function() {
 			for(var i = 0; i < musicList.length; i++) {
 				var index = i;
 				var html = '<li data-index="'+index+'"><span class="title">'+musicList[i].name+'</span></li>';
+				// var datalistHtml = '<option data-index="'+index+'" value="'+musicList[i].name+'"></option>';
+				// $('datalist#musicList').append(datalistHtml);
 				$('.playlist ul').append(html);
 			}
-			var not = new Notification("Music added to your list");
+			notificationsSettings('display', "Music added to your list");
 			fileList.val('');
 		});
 		fileList.click();
@@ -75,7 +156,7 @@ var main = function() {
 		currentSong.name = musicList[index].name;
 		currentSong.path = musicList[index].path;
 		
-		var not = new Notification("Playing " + currentSong.name);
+		notificationsSettings('display', "Playing " + currentSong.name);
 		audio.play();
 
 		$('.playlist ul li').removeClass('active');
@@ -114,7 +195,7 @@ var main = function() {
 			audio.src = musicList[0].path;
 		}
 
-		var not = new Notification("Playing " + currentSong.name);
+		notificationsSettings('display', "Playing " + currentSong.name);
 
 		audio.play();
 	};
@@ -135,6 +216,8 @@ var main = function() {
 	var playerPrev = function() {
 		var prevIndex = currentSong.index - 1;
 
+		prevIndex = shuffle(prevIndex);
+
 		if(currentSong.index === 0) {
 			prevIndex = musicList.length - 1;
 		} 
@@ -148,7 +231,7 @@ var main = function() {
 		$('.playlist ul li').removeClass('active');
 		$('[data-index="'+prevIndex+'"]').addClass('active');
 
-		var not = new Notification("Playing " + currentSong.name);
+		notificationsSettings('display', "Playing " + currentSong.name);
 
 		audio.play();
 	};
@@ -157,6 +240,8 @@ var main = function() {
 	// Next control
 	var playerNext = function() {
 		var nextIndex = currentSong.index + 1;
+
+		nextIndex = shuffle(nextIndex);
 
 		if(nextIndex === musicList.length) {
 			nextIndex = 0;
@@ -171,42 +256,42 @@ var main = function() {
 		$('.playlist ul li').removeClass('active');
 		$('[data-index="'+nextIndex+'"]').addClass('active');
 
-		var not = new Notification("Playing " + currentSong.name);
+		notificationsSettings('display', "Playing " + currentSong.name);
 
 		audio.play();
 	}
 	nextBtn.click(function() { playerNext(); });
 
 	// Remote control functionality
-	peer.on('connection', function(conn) {
-		conn.on('data', function(command){
-	 		switch(command) {
-	 			case 'play':
-	 				playerPlay();
- 				break;
+	// peer.on('connection', function(conn) {
+	// 	conn.on('data', function(command){
+	//  		switch(command) {
+	//  			case 'play':
+	//  				playerPlay();
+ // 				break;
 
- 				case 'pause':
-	 				playerPause();
- 				break;
+ // 				case 'pause':
+	//  				playerPause();
+ // 				break;
 
- 				case 'next':
-	 				playerNext();
- 				break;
+ // 				case 'next':
+	//  				playerNext();
+ // 				break;
 
- 				case 'prev':
-	 				playerPrev();
- 				break;
+ // 				case 'prev':
+	//  				playerPrev();
+ // 				break;
 
- 				case 'volUp':
-	 				playerVolUp();
- 				break;
+ // 				case 'volUp':
+	//  				playerVolUp();
+ // 				break;
 
- 				case 'volDown':
-	 				playerVolDown();
- 				break;
-	 		}
-		});
-	});
+ // 				case 'volDown':
+	//  				playerVolDown();
+ // 				break;
+	//  		}
+	// 	});
+	// });
 
 	// Checking if the current song is finished
 	setInterval(function() {

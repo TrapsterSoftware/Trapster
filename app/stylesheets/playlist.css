@@ -48,3 +48,17 @@
 .playlist h2 {
 	text-align: center;
 }
+
+.playlist #musicSearch {
+	width: 100%;
+	height: auto;
+	border: none;
+	padding: 5px;
+	font-size: 18px;
+	margin-bottom: 5px;
+	border-bottom: 1px solid black;
+	background-color: #B3E5FC;
+}
+.playlist #musicSearch:focus {
+	outline: none;;
+}

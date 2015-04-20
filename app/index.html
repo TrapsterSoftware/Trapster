@@ -28,6 +28,10 @@
 		</div>
 	</div>
 	<div class="playlist">
+		<!-- <input type="text" list="musicList" id="musicSearch" />
+		<datalist id="musicList">
+			<option value="test">Test</option>
+		</datalist> -->
 		<ul>
 			<!-- <li data-index="no-index">
 				<span class="title">No song in playlist</span>
@@ -36,7 +40,7 @@
 		</ul>
 	</div>
 	<div class="toolbar">
-		<!-- <div class="controls left">
+		<div class="controls left">
 			<img src="media/buttons/repeat-all.png" id="repeatAll"/>
 			<img src="media/buttons/repeat-track.png" class="hide" id="repeatTrack"/>
 			<img src="media/buttons/shuffle.png" class="" id="shuffle"/>
@@ -44,12 +48,35 @@
 		<div class="controls right">
 			<img src="media/buttons/settings.png" id="settings" /> 
 			<img src="media/buttons/dev-tools.png" id="devTools" /> 
-		</div> -->
+		</div>
+	</div>
+
+	<div class="modal-settings hide">
+		<div class="dialog">
+			<section class="title">
+				<h2>Settings</h2>
+			</section>
+			<div class="content">
+				<table>
+					<tr>
+						<th>Notification</th>
+						<td>
+							<img src="media/buttons/notification-on.png">
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="actions">
+				<button id="settingsClose">Close</button>
+				<button id="settingsSave">Save</button>
+			</div>
+		</div>
 	</div>
 
 	<input type="file" id="fileList" multiple accept=".mp3">
 
 	<script type="text/javascript" src="script/app.js"></script>
+	<!-- // <script type="text/javascript" src="script/live-reload.js"></script> -->
 
 </body>
 </html>
