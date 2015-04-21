@@ -45,7 +45,7 @@ var main = function() {
 			name: '',
 			index: 0,
 			path: '',
-			volume: 0.1, 
+			volume: 1.0, 
 			loop: false,
 			shuffle: false
 		},
@@ -90,6 +90,7 @@ var main = function() {
 		repeatTrack.addClass('hide');
 		repeatAll.removeClass('hide');
 	}
+	$('#volume-control').val(currentSong.volume * 100);
 
 	// Notifications
 	var notificationsSettings = function(mode, text) {
