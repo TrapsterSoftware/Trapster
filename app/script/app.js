@@ -51,6 +51,22 @@ var main = function() {
 		},
 		audio = new Audio();
 
+	// Clear playlist
+	var clearPlaylist = function() {
+		$('.playlist ul').empty();
+		$('.playlist ul').append('<h2>No song in playlist</h2>');
+		musicList = [];
+		localStorage.setItem('saved_playlist', '[]');
+	};
+	$('#clearPlaylist').click(function() { clearPlaylist(); });
+
+	// Save playlist
+	var savePlayList = function() {
+		localStorage.setItem('saved_playlist', JSON.stringify(musicList));
+		console.log("Palylist saved!");
+	};
+	$('#savePlaylist').click(function() { savePlayList(); });
+
 	// Stop button
 	var stop = function() {
 		audio.pause();
@@ -122,6 +138,20 @@ var main = function() {
 		repeatAll.removeClass('hide');
 	}
 	$('#volume-control').val(currentSong.volume * 100);
+	if(typeof localStorage.getItem('saved_playlist') === 'string') {
+		if(localStorage.getItem('saved_playlist') === '[]') {
+			$('.playlist ul').empty();
+			$('.playlist ul').append('<h2>No song in playlist</h2>');
+		} else {
+			musicList = JSON.parse(localStorage.getItem('saved_playlist'));
+			$('.playlist ul').empty();
+			for(var i = 0; i < musicList.length; i++) {
+				var index = i;
+				var html = '<li data-index="'+index+'"><span class="title">'+musicList[i].name+'</span></li>';
+				$('.playlist ul').append(html);
+			}
+		}
+	} else {musicList = [];}
 
 	// Notifications
 	var notificationsSettings = function(mode, text) {
@@ -171,7 +201,7 @@ var main = function() {
 			for(var i = 0; i < musicList.length; i++) {
 				var index = i;
 				var html = '<li data-index="'+index+'"><span class="title">'+musicList[i].name+'</span></li>';
-				// var datalistHtml = '<option data-index="'+index+'" value="'+musicList[i].name+'"></option>';
+				// var datalistHtml = '<option data-index="'+index+'" value="'+musicList[i].name+'">'+index+'</option>';
 				// $('datalist#musicList').append(datalistHtml);
 				$('.playlist ul').append(html);
 			}
