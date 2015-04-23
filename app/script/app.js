@@ -51,6 +51,37 @@ var main = function() {
 		},
 		audio = new Audio();
 
+	// Stop button
+	var stop = function() {
+		audio.pause();
+		audio.currentTime = 0;
+		$('#play').removeClass('hide');
+		$('#pause').addClass('hide');
+	};
+	$('#stop').click(function() { stop(); });
+
+	// Notifications settings
+	var notificationSettings = function(mode) {
+		if(mode === 'on' && appSettings.notifications === false) {
+			appSettings.notifications = true;
+			$('#notificationOn').addClass('hide');
+			$('#notificationOff').removeClass('hide');
+		} else if(mode === 'off' && appSettings.notifications === true) {
+			appSettings.notifications = false;
+			$('#notificationOn').removeClass('hide');
+			$('#notificationOff').addClass('hide');
+		}
+	};
+	if(appSettings.notifications === true) {
+		$('#notificationOn').addClass('hide');
+		$('#notificationOff').removeClass('hide');
+	} else {
+		$('#notificationOn').removeClass('hide');
+		$('#notificationOff').addClass('hide');
+	}
+	$('#notificationOn').click(function() { notificationSettings('on'); });
+	$('#notificationOff').click(function() { notificationSettings('off'); });
+
 	// Current song title
 	var currentSongTitle = function() {
 		$('.song-title h3').text(currentSong.name);
