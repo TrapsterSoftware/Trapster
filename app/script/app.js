@@ -45,7 +45,7 @@ var main = function() {
 			name: '',
 			index: 0,
 			path: '',
-			volume: 1.0, 
+			volume: 0.5, 
 			loop: false,
 			shuffle: false
 		},
@@ -182,7 +182,6 @@ var main = function() {
 			repeatTrack.addClass('hide');
 			audio.loop = false;
 		}
-		
 	};
 	repeatAll.click(function() { songLoop('track'); });
 	repeatTrack.click(function() { songLoop(); });
