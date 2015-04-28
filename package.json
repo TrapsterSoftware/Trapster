@@ -3,6 +3,7 @@
 	"main": "app://audio-player/app/index.html",
 	"single-instance": true,
 	"window": {
+		"icon": "trapster-title.png",
 		"toolbar": false,
 		"width": 850,
 		"height": 500,

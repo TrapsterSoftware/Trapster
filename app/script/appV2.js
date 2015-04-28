@@ -12,39 +12,54 @@ var main = function() {
 		name: '',
 		index: 0,
 		path: '',
-		volume: 1, 
-		loop: false,
-		shuffle: false
+		volume: 1,
+		shuffle: false,
+		loop: false
 	};
 	var audio = new Audio();
+	audio.loop = false;
+	var notification;
 	var musicList = [];
 	var audioSeek = $('#audio-seek'),
+		volumeControl = $('#volume-control'),
 		fileList = $('#fileList'),
 		playBtn = $('#play'),
 		pauseBtn = $('#pause'),
 		prevBtn = $('#prev'),
 		nextBtn = $('#next'),
-		volUpBtn = $('#volUp'),
-		volDownBtn = $('#volDown'),
 		getMusicBtn = $('#getMusic'),
 		repeatAll = $('#repeatAll'),
 		repeatTrack = $('#repeatTrack');
 	var init = function() {
-		// shuffle
-		if(currentSong.shuffle === true) { $('#shuffle').addClass('active'); }
-
-		// Audio volume
-		$('#volume-control').val(currentSong.volume * 100);
-		audio.volume = currentSong.volume;
-
-		// Audio loop
-		audio.loop = currentSong.loop;
-		if(currentSong.loop) {
-			repeatTrack.removeClass('hide');
-			repeatAll.addClass('hide');
-		} else {
-			repeatTrack.addClass('hide');
-			repeatAll.removeClass('hide');
+		// Persistent settings
+		var loop = localStorage.getItem('player_loop');
+		var volume = localStorage.getItem('player_volume');
+		var shuffle = localStorage.getItem('player_shuffle');
+		if(typeof loop != 'object' && loop != '') {
+			if(loop === 'true') {
+				currentSong.loop = true;
+				audio.loop = true;
+				repeatAll.addClass('hide');
+				repeatTrack.removeClass('hide');
+			} else {
+				currentSong.loop = false;
+				audio.loop = false;
+				repeatAll.removeClass('hide');
+				repeatTrack.addClass('hide');
+			}
+		}
+		if(typeof shuffle != 'object' && shuffle != '') {
+			if(shuffle === 'true') {
+				currentSong.shuffle = true;
+				$('#shuffle').addClass('active');
+			} else {
+				currentSong.shuffle = false;
+				$('#shuffle').removeClass('active');
+			}
+		}
+		if(typeof volume != 'object' && volume != '') {
+			volumeControl.val(Number(volume) * 100);
+			audio.volume = Number(volume);
 		}
 
 		// Importing saved playlist
@@ -62,11 +77,8 @@ var main = function() {
 				}
 			}
 		} else {musicList = [];}
-
-
-
-		
 	};
+
 	var audioPlayer = {
 		clearPlaylist: function() {
 			$('.playlist ul').empty();
@@ -103,23 +115,27 @@ var main = function() {
 				// Stop shuffle
 				$('#shuffle').removeClass('active');
 				currentSong.shuffle = false;
+				localStorage.setItem('player_shuffle', false);
 			} else {
 				// Turn on shuffle
 				$('#shuffle').addClass('active');
 				currentSong.shuffle = true;
+				localStorage.setItem('player_shuffle', true);
 			}
 		},
 		songDuration: function() {
 			audioSeek.attr("max", parseInt(audio.duration, 10));
 		}, 
-		 songLoop: function(mode) {
+		songLoop: function(mode) {
 			if(mode === 'track') {
 				repeatAll.addClass('hide');
 				repeatTrack.removeClass('hide');
+				localStorage.setItem('player_loop', true);
 				audio.loop = true;
 			} else {
 				repeatAll.removeClass('hide');
 				repeatTrack.addClass('hide');
+				localStorage.setItem('player_loop', false);
 				audio.loop = false;
 			}
 			
@@ -283,6 +299,40 @@ var main = function() {
 		}
 	});
 
+	// Audio player tray
+	var tray = new gui.Tray({title: 'Trapster', icon: 'trapster-title.png'});
+	var trayMenu = new gui.Menu();
+	trayMenu.append(new gui.MenuItem({
+		label: 'Play', 
+		icon: 'app/media/buttons/play.png', 
+		click: function() {
+			audioPlayer.play();
+		}
+	}));
+	trayMenu.append(new gui.MenuItem({
+		label: 'Previous', 
+		icon: 'app/media/buttons/prev.png', 
+		click: function() {
+			audioPlayer.prev();
+		}
+	}));
+	trayMenu.append(new gui.MenuItem({
+		label: 'Next', 
+		icon: 'app/media/buttons/next.png', 
+		click: function() {
+			audioPlayer.next();
+		}
+	}));
+	trayMenu.append(new gui.MenuItem({
+		label: 'Stop', 
+		icon: 'app/media/buttons/stop.png', 
+		click: function() {
+			audioPlayer.stop();
+		}
+	}));
+
+	tray.menu = trayMenu;
+
 	// Play the song selected from the playlist
 	$('.playlist ul').on('click', 'li', function(e) {
 		e.preventDefault();
@@ -306,8 +356,9 @@ var main = function() {
 	});
 
 	// Volume control
-	$('#volume-control').on('change', function() {
+	volumeControl.on('change', function() {
 		var volume = $('#volume-control').val() / 100;
+		localStorage.setItem('player_volume', volume);
 		currentSong.volume = volume;
 		audio.volume = volume;
 	});
@@ -315,7 +366,7 @@ var main = function() {
 	// Checking if the current song is finished
 	setInterval(function() {
 		if(audio.ended) { 
-			audioPlayer.playerNext();
+			audioPlayer.next();
 		}
 		audioPlayer.songDuration();
 	}, 1000);
@@ -332,7 +383,6 @@ var main = function() {
 
 	// Initializing some features of player
 	init();
-
 };
 
 $(document).ready(main);
