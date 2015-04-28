@@ -236,6 +236,15 @@ var main = function() {
 				fileList.val('');
 			});
 			fileList.click();
+		}, 
+		playlistSort: function() {
+			musicList.sort();
+			$('.playlist ul').empty();
+			for(var i = 0; i < musicList.length; i++) {
+				var index = i;
+				var html = '<li data-index="'+index+'"><span class="title">'+musicList[i].name+'</span></li>';
+				$('.playlist ul').append(html);
+			}
 		}
 	};
 
@@ -285,6 +294,10 @@ var main = function() {
 
 			case 'clearPlaylist': 
 				audioPlayer.clearPlaylist();
+			break;
+
+			case 'sort': 
+				audioPlayer.playlistSort();
 			break;
 
 			case 'settings': 
