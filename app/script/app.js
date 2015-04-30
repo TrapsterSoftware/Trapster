@@ -88,7 +88,6 @@ var main = function() {
 		}, 
 		savePlayList: function() {
 			localStorage.setItem('saved_playlist', JSON.stringify(musicList));
-			console.log("Palylist saved!");
 		}, 
 		stop: function() {
 			audio.pause();
@@ -233,18 +232,15 @@ var main = function() {
 					// $('datalist#musicList').append(datalistHtml);
 					$('.playlist ul').append(html);
 				}
+				if(currentSong.name != '' && currentSong.path != '') {
+					audioPlayer.activeSong();
+				}
 				fileList.val('');
 			});
 			fileList.click();
 		}, 
-		playlistSort: function() {
-			musicList.sort();
-			$('.playlist ul').empty();
-			for(var i = 0; i < musicList.length; i++) {
-				var index = i;
-				var html = '<li data-index="'+index+'"><span class="title">'+musicList[i].name+'</span></li>';
-				$('.playlist ul').append(html);
-			}
+		activeSong: function() {
+			$('[data-index="'+currentSong.index+'"]').addClass('active');
 		}
 	};
 
@@ -296,10 +292,6 @@ var main = function() {
 				audioPlayer.clearPlaylist();
 			break;
 
-			case 'sort': 
-				audioPlayer.playlistSort();
-			break;
-
 			case 'settings': 
 				$('.modal-settings').removeClass('hide');
 			break;
@@ -319,13 +311,20 @@ var main = function() {
 	});
 
 	// Audio player tray
-	var tray = new gui.Tray({title: 'Trapster', icon: 'trapster-title.png'});
+	var tray = new gui.Tray({title: 'Trapster', icon: 'trapster.png'});
 	var trayMenu = new gui.Menu();
 	trayMenu.append(new gui.MenuItem({
 		label: 'Play', 
 		icon: 'app/media/buttons/play.png', 
 		click: function() {
 			audioPlayer.play();
+		}
+	}));
+	trayMenu.append(new gui.MenuItem({
+		label: 'Pause', 
+		icon: 'app/media/buttons/pause.png', 
+		click: function() {
+			audioPlayer.pause();
 		}
 	}));
 	trayMenu.append(new gui.MenuItem({
@@ -347,6 +346,13 @@ var main = function() {
 		icon: 'app/media/buttons/stop.png', 
 		click: function() {
 			audioPlayer.stop();
+		}
+	}));
+	trayMenu.append(new gui.MenuItem({
+		label: 'Close', 
+		// icon: 'app/media/buttons/stop.png', 
+		click: function() {
+			win.close();
 		}
 	}));
 
