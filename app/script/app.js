@@ -121,7 +121,7 @@ var main = function() {
 				$('.playlist ul').empty();
 				for(var i = 0; i < musicList.length; i++) {
 					var index = i;
-					var html = '<li data-index="'+index+'"><span class="title">'+musicList[i].name+'</span></li>';
+					var html = '<li data-index="'+index+'">'+musicList[i].name+'</li>';
 					$('.playlist ul').append(html);
 				}
 			}
@@ -316,7 +316,7 @@ var main = function() {
 				}
 				for(var i = 0; i < musicList.length; i++) {
 					var index = i;
-					var html = '<li data-index="'+index+'"><span class="title">'+musicList[i].name+'</span></li>';
+					var html = '<li data-index="'+index+'">'+musicList[i].name+'</li>';
 					// var datalistHtml = '<option data-index="'+index+'" value="'+musicList[i].name+'">'+index+'</option>';
 					// $('datalist#musicList').append(datalistHtml);
 					$('.playlist ul').append(html);
@@ -405,6 +405,23 @@ var main = function() {
 				audioPlayer.windowResize('max');
 			break;
 		}
+	});
+
+	// Playlist context menu
+	var contextMenu = new gui.Menu(), cmFileId
+	contextMenu.append(new gui.MenuItem({
+		label: 'Show in folder',
+		icon: 'media/buttons/show-in-folder.png', 
+		click: function() {
+			var path = musicList[cmFileId].path;
+			cmFileId = '';
+			gui.Shell.showItemInFolder(path);
+		}
+	}));
+	$('.playlist ul').on('contextmenu', function(e) {
+		e.preventDefault();
+		cmFileId = e.target.attributes['data-index'].value;
+		contextMenu.popup(e.clientX, e.clientY);
 	});
 
 	// Audio player tray
