@@ -410,8 +410,7 @@ var main = function() {
 	// Playlist context menu
 	var contextMenu = new gui.Menu(), cmFileId
 	contextMenu.append(new gui.MenuItem({
-		label: 'Show in folder',
-		icon: 'media/buttons/show-in-folder.png', 
+		label: 'Show in folder', 
 		click: function() {
 			var path = musicList[cmFileId].path;
 			cmFileId = '';
