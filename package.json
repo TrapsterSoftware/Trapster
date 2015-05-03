@@ -1,6 +1,7 @@
 {
-	"name": "audio-player",
-	"main": "app://audio-player/app/index.html",
+	"name": "trapster",
+	"main": "app://trapster/app/index.html",
+	"version": "0.3", 
 	"single-instance": true,
 	"window": {
 		"icon": "trapster.png",
