@@ -7,7 +7,31 @@ var main = function() {
 	win.on('restore', function() {
 		win.resizeTo(850, 500);
 	});
+	gui.App.on('open', function(cmd) {
+		audioPlayer.singleFile(cmd);
+	});
 
+	var appSettings = {
+		minimizeToTray: false
+	};
+	var settingsChange = {
+		save: function() {
+			localStorage.setItem('app_settings', JSON.stringify(appSettings));
+		}, 
+		minimizeToTray: function() {
+			if(appSettings.minimizeToTray === true) {
+				appSettings.minimizeToTray = false;
+				$('#mToTrayChecked').addClass('hide');
+				$('#mToTrayUnchecked').removeClass('hide');
+				settingsChange.save();
+			} else {
+				appSettings.minimizeToTray = true;
+				$('#mToTrayChecked').removeClass('hide');
+				$('#mToTrayUnchecked').addClass('hide');
+				settingsChange.save();
+			}
+		}
+	};
 	var currentSong = {
 		name: '',
 		index: 0,
@@ -31,7 +55,26 @@ var main = function() {
 		repeatAll = $('#repeatAll'),
 		repeatTrack = $('#repeatTrack');
 	var init = function() {
+		// Playing music using default windows app
+		var startFile = gui.App.argv;
+		if(startFile.length === 1) {
+			audioPlayer.singleFile(gui.App.argv);
+		}
+
 		// Persistent settings
+		if( typeof localStorage.getItem('app_settings') === 'object' || localStorage.getItem('app_settings') === '' ) {
+			localStorage.setItem('app_settings', JSON.stringify(appSettings));
+		} else {
+			appSettings = JSON.parse(localStorage.getItem('app_settings'));
+		}
+		if(appSettings.minimizeToTray === true) {
+			$('#mToTrayChecked').removeClass('hide');
+			$('#mToTrayUnchecked').addClass('hide');
+		} else {
+			$('#mToTrayChecked').addClass('hide');
+			$('#mToTrayUnchecked').removeClass('hide');
+		}
+
 		var loop = localStorage.getItem('player_loop');
 		var volume = localStorage.getItem('player_volume');
 		var shuffle = localStorage.getItem('player_shuffle');
@@ -80,6 +123,27 @@ var main = function() {
 	};
 
 	var audioPlayer = {
+		singleFile: function(cmd) {
+			var songPath, songName;
+			if(cmd.length === 1) {
+				songPath = cmd[0];
+				songName = songPath.split('\\');
+				songName = songName[songName.length - 1]
+			} else {
+				songPath = cmd.split('"');
+				songPath = songPath[songPath.length - 2];
+				songName = songPath.split('\\');
+				songName = songName[songName.length - 1];
+			}
+			currentSong.name = songName;
+			currentSong.path = songPath;
+			
+			playBtn.addClass('hide');
+			pauseBtn.removeClass('hide');
+			audioPlayer.currentSongTitle();
+			audio.src = songPath;
+			audio.play();
+		}, 
 		clearPlaylist: function() {
 			$('.playlist ul').empty();
 			$('.playlist ul').append('<h2>No song in playlist</h2>');
@@ -304,8 +368,12 @@ var main = function() {
 				$('.modal-settings').addClass('hide');
 			break;
 
-			case 'settingsSave': 
-				
+			case 'mToTrayChecked':
+				settingsChange.minimizeToTray();
+			break;
+
+			case 'mToTrayUnchecked':
+				settingsChange.minimizeToTray();
 			break;
 		}
 	});
@@ -349,14 +417,25 @@ var main = function() {
 		}
 	}));
 	trayMenu.append(new gui.MenuItem({
-		label: 'Close', 
-		// icon: 'app/media/buttons/stop.png', 
+		label: 'Exit', 
+		icon: 'app/media/buttons/exit.png', 
 		click: function() {
 			win.close();
 		}
 	}));
 
 	tray.menu = trayMenu;
+
+	win.on('minimize', function() {
+		if(appSettings.minimizeToTray === true) {
+			win.hide();
+		}
+	});
+	tray.on('click', function() {
+		win.show();
+		win.resizeTo(850, 500);
+	});
+
 
 	// Play the song selected from the playlist
 	$('.playlist ul').on('click', 'li', function(e) {
