@@ -55,9 +55,15 @@ var main = function() {
 		repeatAll = $('#repeatAll'),
 		repeatTrack = $('#repeatTrack');
 	var init = function() {
+		// Window properties
+		win.setMaximumSize(850, 500);
+		win.setMinimumSize(850, 500);
+		win.setResizable(false);
+
 		// Playing music using default windows app
 		var startFile = gui.App.argv;
 		if(startFile.length === 1) {
+			audioPlayer.windowResize('min');
 			audioPlayer.singleFile(gui.App.argv);
 		}
 
@@ -123,6 +129,25 @@ var main = function() {
 	};
 
 	var audioPlayer = {
+		windowResize: function(mode) {
+			switch(mode) {
+				case 'min':
+					win.setMaximumSize(484, 69);
+					win.setMinimumSize(484, 69);
+					win.width = 484;
+					win.height = 69;
+					win.restore();
+				break;
+
+				case 'max':
+					win.setMaximumSize(850, 500);
+					win.setMinimumSize(850, 500);
+					win.width = 850;
+					win.height = 500;
+					win.restore();
+				break;
+			}
+		}, 
 		singleFile: function(cmd) {
 			var songPath, songName;
 			if(cmd.length === 1) {
@@ -374,6 +399,10 @@ var main = function() {
 
 			case 'mToTrayUnchecked':
 				settingsChange.minimizeToTray();
+			break;
+
+			case 'large':
+				audioPlayer.windowResize('max');
 			break;
 		}
 	});

@@ -46,6 +46,7 @@
 .player .controls img {
 	margin: 5px;
 	cursor: pointer;
+	float: left;
 }
 .player .controls img:hover {box-shadow: 0 0 1px black;}
 
