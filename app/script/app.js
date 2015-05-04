@@ -38,7 +38,8 @@ var main = function() {
 		path: '',
 		volume: 1,
 		shuffle: false,
-		loop: false
+		loop: false, 
+		singleFile: false
 	};
 	var audio = new Audio();
 	audio.loop = false;
@@ -63,6 +64,7 @@ var main = function() {
 		// Playing music using default windows app
 		var startFile = gui.App.argv;
 		if(startFile.length === 1) {
+			currentSong.singleFile = true;
 			audioPlayer.windowResize('min');
 			audioPlayer.singleFile(gui.App.argv);
 		}
@@ -163,6 +165,8 @@ var main = function() {
 			currentSong.name = songName;
 			currentSong.path = songPath;
 			
+			currentSong.singleFile = true;
+
 			playBtn.addClass('hide');
 			pauseBtn.removeClass('hide');
 			audioPlayer.currentSongTitle();
@@ -403,6 +407,7 @@ var main = function() {
 
 			case 'large':
 				audioPlayer.windowResize('max');
+				currentSong.singleFile = false;
 			break;
 		}
 	});
@@ -428,42 +433,42 @@ var main = function() {
 	var trayMenu = new gui.Menu();
 	trayMenu.append(new gui.MenuItem({
 		label: 'Play', 
-		icon: 'app/media/buttons/play.png', 
+		icon: 'media/buttons/play.png', 
 		click: function() {
 			audioPlayer.play();
 		}
 	}));
 	trayMenu.append(new gui.MenuItem({
 		label: 'Pause', 
-		icon: 'app/media/buttons/pause.png', 
+		icon: 'media/buttons/pause.png', 
 		click: function() {
 			audioPlayer.pause();
 		}
 	}));
 	trayMenu.append(new gui.MenuItem({
 		label: 'Previous', 
-		icon: 'app/media/buttons/prev.png', 
+		icon: 'media/buttons/prev.png', 
 		click: function() {
 			audioPlayer.prev();
 		}
 	}));
 	trayMenu.append(new gui.MenuItem({
 		label: 'Next', 
-		icon: 'app/media/buttons/next.png', 
+		icon: 'media/buttons/next.png', 
 		click: function() {
 			audioPlayer.next();
 		}
 	}));
 	trayMenu.append(new gui.MenuItem({
 		label: 'Stop', 
-		icon: 'app/media/buttons/stop.png', 
+		icon: 'media/buttons/stop.png', 
 		click: function() {
 			audioPlayer.stop();
 		}
 	}));
 	trayMenu.append(new gui.MenuItem({
 		label: 'Exit', 
-		icon: 'app/media/buttons/exit.png', 
+		icon: 'media/buttons/exit.png', 
 		click: function() {
 			win.close();
 		}
@@ -514,9 +519,12 @@ var main = function() {
 
 	// Checking if the current song is finished
 	setInterval(function() {
-		if(audio.ended) { 
-			audioPlayer.next();
+		if(currentSong.singleFile === false) {
+			if(audio.ended) { 
+				audioPlayer.next();
+			}
 		}
+		if(audio.ended) { audioPlayer.stop(); }
 		audioPlayer.songDuration();
 	}, 1000);
 
