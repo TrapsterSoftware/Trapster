@@ -116,15 +116,15 @@ var main = function() {
 		// Importing saved playlist
 		if(typeof localStorage.getItem('saved_playlist') === 'string') {
 			if(localStorage.getItem('saved_playlist') === '[]') {
-				$('.playlist ul').empty();
-				$('.playlist ul').append('<h2>No song in playlist</h2>');
+				$('.playlist #list').empty();
+				$('.playlist #list').append('<h2>No song in playlist</h2>');
 			} else {
 				musicList = JSON.parse(localStorage.getItem('saved_playlist'));
-				$('.playlist ul').empty();
+				$('.playlist #list').empty();
 				for(var i = 0; i < musicList.length; i++) {
 					var index = i;
 					var html = '<li data-index="'+index+'">'+musicList[i].name+'</li>';
-					$('.playlist ul').append(html);
+					$('.playlist #list').append(html);
 				}
 			}
 		} else {musicList = [];}
@@ -174,8 +174,7 @@ var main = function() {
 			audio.play();
 		}, 
 		clearPlaylist: function() {
-			$('.playlist ul').empty();
-			$('.playlist ul').append('<h2>No song in playlist</h2>');
+			$('.playlist #list').empty().append('<h2>No song in playlist</h2>');
 			musicList = [];
 			localStorage.setItem('saved_playlist', '[]');
 		}, 
@@ -312,7 +311,7 @@ var main = function() {
 			fileList.change(function(e){
 				e.preventDefault();
 
-				$('.playlist ul').empty();
+				$('.playlist #list').empty();
 
 				var files = fileList[0].files;
 				for(var i = 0; i < files.length; i++) {
@@ -321,9 +320,7 @@ var main = function() {
 				for(var i = 0; i < musicList.length; i++) {
 					var index = i;
 					var html = '<li data-index="'+index+'">'+musicList[i].name+'</li>';
-					// var datalistHtml = '<option data-index="'+index+'" value="'+musicList[i].name+'">'+index+'</option>';
-					// $('datalist#musicList').append(datalistHtml);
-					$('.playlist ul').append(html);
+					$('.playlist #list').append(html);
 				}
 				if(currentSong.name != '' && currentSong.path != '') {
 					audioPlayer.activeSong();
@@ -334,6 +331,17 @@ var main = function() {
 		}, 
 		activeSong: function() {
 			$('[data-index="'+currentSong.index+'"]').addClass('active');
+		}, 
+		playSearched: function(song) {
+			for(var i = 0; i < musicList.length; i++) {
+				if(musicList[i].name == song) {
+					currentSong.name = musicList[i].name;
+					currentSong.index = i;
+					currentSong.path = musicList[i].path;
+					audio.src = musicList[i].path;
+				}
+			}
+			audioPlayer.play();
 		}
 	};
 
@@ -422,7 +430,7 @@ var main = function() {
 			gui.Shell.showItemInFolder(path);
 		}
 	}));
-	$('.playlist ul').on('contextmenu', function(e) {
+	$('.playlist #list').on('contextmenu', function(e) {
 		e.preventDefault();
 		cmFileId = e.target.attributes['data-index'].value;
 		contextMenu.popup(e.clientX, e.clientY);
@@ -486,6 +494,26 @@ var main = function() {
 		win.resizeTo(850, 500);
 	});
 
+	// Music search
+	$('input#musicSearch').keypress(function() {
+		$('.playlist #searched').empty();
+		var value = $('#musicSearch').val().toLowerCase();;
+		for(var i = 0; i < musicList.length; i++) {
+			var name = musicList[i].name.toLowerCase();
+			name = name.search(value);
+			if(name != -1) {
+				var html = '<li data-index="'+i+'">'+musicList[i].name+'</li>';
+				$('.playlist #searched').append(html);
+			}
+		}
+		$('.playlist #list').addClass('hide');
+		$('.playlist #searched').removeClass('hide');
+	}).focusin(function() {
+		$('.playlist #list').addClass('hide');
+	}).focusout(function() {
+		$('.playlist #list').removeClass('hide');
+		$(this).val('');
+	});
 
 	// Play the song selected from the playlist
 	$('.playlist ul').on('click', 'li', function(e) {
@@ -507,6 +535,10 @@ var main = function() {
 
 		$('.playlist ul li').removeClass('active');
 		$(this).addClass('active');
+		currentSong.singleFile = false;
+		$('.playlist #list').removeClass('hide');
+		$('.playlist #searched').addClass('hide');
+		audioPlayer.activeSong();
 	});
 
 	// Volume control
@@ -520,9 +552,7 @@ var main = function() {
 	// Checking if the current song is finished
 	setInterval(function() {
 		if(currentSong.singleFile === false) {
-			if(audio.ended) { 
-				audioPlayer.next();
-			}
+			if(audio.ended) { audioPlayer.next(); }
 		}
 		if(audio.ended) { audioPlayer.stop(); }
 		audioPlayer.songDuration();
