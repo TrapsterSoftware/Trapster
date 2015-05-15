@@ -5,10 +5,10 @@
 	"single-instance": true,
 	"window": {
 		"icon": "trapster.png",
-		"width": 850,
-		"height": 500,
+		"width": 870,
+		"height": 630,
 		"toolbar": false,
-		"show": false, 
-		"frame": true
+		"show": true, 
+		"frame": false
 	}
 }

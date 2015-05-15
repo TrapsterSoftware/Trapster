@@ -1,6 +1,6 @@
 .playlist {
 	width: 100%;
-	height: 78%;
+	height: 77%;
 	display: block;
 	padding: 10px;
 	overflow-y: scroll;
@@ -61,4 +61,12 @@
 }
 .playlist #musicSearch:focus {
 	outline: none;;
+}
+
+
+.searchlist {
+	width: 100%;
+	height: auto;
+	max-height: 370px;
+	background-color: white;
 }

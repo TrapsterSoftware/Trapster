@@ -1,18 +1,21 @@
 var gui = require('nw.gui'),
-	win = gui.Window.get();
+	win = gui.Window.get(), 
+	http = require('http');;
 
 onload = function() { win.show(); }
 
 var main = function() {
 	win.on('restore', function() {
-		win.resizeTo(850, 500);
+		win.resizeTo(870, 630);
 	});
 	gui.App.on('open', function(cmd) {
 		audioPlayer.singleFile(cmd);
 	});
 
 	var appSettings = {
-		minimizeToTray: false
+		minimizeToTray: false, 
+		alwaysOnTop: false, 
+		progressBar: false
 	};
 	var settingsChange = {
 		save: function() {
@@ -28,6 +31,35 @@ var main = function() {
 				appSettings.minimizeToTray = true;
 				$('#mToTrayChecked').removeClass('hide');
 				$('#mToTrayUnchecked').addClass('hide');
+				settingsChange.save();
+			}
+		}, 
+		alwaysOnTop: function() {
+			if(appSettings.alwaysOnTop === true) {
+				appSettings.alwaysOnTop = false;
+				$('#alwaysTopCh').addClass('hide');
+				$('#alwaysTopUnch').removeClass('hide');
+				win.setAlwaysOnTop(false);
+				settingsChange.save();
+			} else {
+				appSettings.alwaysOnTop = true;
+				$('#alwaysTopCh').removeClass('hide');
+				$('#alwaysTopUnch').addClass('hide');
+				win.setAlwaysOnTop(true);
+				settingsChange.save();
+			}
+		}, 
+		progressBar: function() {
+			if(appSettings.progressBar === true) {
+				appSettings.progressBar = false;
+				$('#progressBarCh').addClass('hide');
+				$('#progressBarUnch').removeClass('hide');
+				win.setProgressBar(0);
+				settingsChange.save();
+			} else {
+				appSettings.progressBar = true;
+				$('#progressBarCh').removeClass('hide');
+				$('#progressBarUnch').addClass('hide');
 				settingsChange.save();
 			}
 		}
@@ -57,8 +89,8 @@ var main = function() {
 		repeatTrack = $('#repeatTrack');
 	var init = function() {
 		// Window properties
-		win.setMaximumSize(850, 500);
-		win.setMinimumSize(850, 500);
+		win.setMaximumSize(870, 630);
+		win.setMinimumSize(870, 630);
 		win.setResizable(false);
 
 		// Playing music using default windows app
@@ -81,6 +113,22 @@ var main = function() {
 		} else {
 			$('#mToTrayChecked').addClass('hide');
 			$('#mToTrayUnchecked').removeClass('hide');
+		}
+		if(appSettings.alwaysOnTop === true) {
+			$('#alwaysTopCh').removeClass('hide');
+			$('#alwaysTopUnch').addClass('hide');
+			win.setAlwaysOnTop(true);
+		} else {
+			$('#alwaysTopCh').addClass('hide');
+			$('#alwaysTopUnch').removeClass('hide');
+			win.setAlwaysOnTop(false);
+		}
+		if(appSettings.progressBar === true) {
+			$('#progressBarCh').removeClass('hide');
+			$('#progressBarUnch').addClass('hide');
+		} else {
+			$('#progressBarCh').addClass('hide');
+			$('#progressBarUnch').removeClass('hide');
 		}
 
 		var loop = localStorage.getItem('player_loop');
@@ -142,10 +190,10 @@ var main = function() {
 				break;
 
 				case 'max':
-					win.setMaximumSize(850, 500);
-					win.setMinimumSize(850, 500);
-					win.width = 850;
-					win.height = 500;
+					win.setMaximumSize(870, 630);
+					win.setMinimumSize(870, 630);
+					win.width = 870;
+					win.height = 630;
 					win.restore();
 				break;
 			}
@@ -187,12 +235,14 @@ var main = function() {
 			$('.playlist ul li').removeClass('active');
 			$('#play').removeClass('hide');
 			$('#pause').addClass('hide');
-			$('.song-title h3').text('No song currently playing');
+			$('.song-title h4').text('No song currently playing');
 			win.title = 'Trapster';
+			$('.title-bar .title').text(win.title);
 		}, 
 		currentSongTitle: function() {
-			$('.song-title h3').text(currentSong.name);
+			$('.song-title h4').text(currentSong.name);
 			win.title = 'Trapster' + ' - ' + currentSong.name;
+			$('.title-bar .title').text(win.title);
 		}, 
 		shuffle: function(index) {
 			if(currentSong.shuffle === true) {
@@ -218,7 +268,7 @@ var main = function() {
 			audioSeek.attr("max", parseInt(audio.duration, 10));
 		}, 
 		songLoop: function(mode) {
-			if(mode === 'track') {
+			if(mode == 'track') {
 				repeatAll.addClass('hide');
 				repeatTrack.removeClass('hide');
 				localStorage.setItem('player_loop', true);
@@ -413,9 +463,29 @@ var main = function() {
 				settingsChange.minimizeToTray();
 			break;
 
+			case 'alwaysTopCh':
+				settingsChange.alwaysOnTop();
+			break;
+
+			case 'alwaysTopUnch':
+				settingsChange.alwaysOnTop();
+			break;
+
+			case 'progressBarCh':
+				settingsChange.progressBar();
+			break;
+
+			case 'progressBarUnch':
+				settingsChange.progressBar();
+			break;
+
 			case 'large':
 				audioPlayer.windowResize('max');
 				currentSong.singleFile = false;
+			break;
+
+			case 'exit-app':
+				win.close();
 			break;
 		}
 	});
@@ -491,7 +561,7 @@ var main = function() {
 	});
 	tray.on('click', function() {
 		win.show();
-		win.resizeTo(850, 500);
+		win.resizeTo(870, 630);
 	});
 
 	// Music search
@@ -510,9 +580,6 @@ var main = function() {
 		$('.playlist #searched').removeClass('hide');
 	}).focusin(function() {
 		$('.playlist #list').addClass('hide');
-	}).focusout(function() {
-		$('.playlist #list').removeClass('hide');
-		$(this).val('');
 	});
 
 	// Play the song selected from the playlist
@@ -538,6 +605,7 @@ var main = function() {
 		currentSong.singleFile = false;
 		$('.playlist #list').removeClass('hide');
 		$('.playlist #searched').addClass('hide');
+		$('#musicSearch').val('');
 		audioPlayer.activeSong();
 	});
 
@@ -554,13 +622,22 @@ var main = function() {
 		if(currentSong.singleFile === false) {
 			if(audio.ended) { audioPlayer.next(); }
 		}
-		if(audio.ended) { audioPlayer.stop(); }
+		if(audio.ended && currentSong.singleFile === true) { audioPlayer.stop(); }
 		audioPlayer.songDuration();
 	}, 1000);
 
 	// Updating the seek bar
 	audio.addEventListener('timeupdate', function() {
 		audioSeek.val(parseInt(audio.currentTime, 10));
+
+		if(appSettings.progressBar === true) {
+			var songProgress;
+			songProgress = parseInt(audio.currentTime, 10) / parseInt(audio.duration, 10);
+			songProgress = songProgress * 100;
+			songProgress = songProgress / 100;
+			songProgress = songProgress * 1;
+			win.setProgressBar(songProgress);
+		}
 	}, false);
 
 	// Updating the current time of the song 
@@ -570,6 +647,50 @@ var main = function() {
 
 	// Initializing some features of player
 	init();
+
+	// Remote control
+	http.createServer(function(req, res){
+		req.on('data', function(chunk){
+			var buff = new Buffer(chunk);
+			buff = buff.toString();
+			var cmd = buff;
+			switch(cmd) {
+				case 'play':
+					audioPlayer.play();
+				break;
+
+				case 'pause':
+					audioPlayer.pause();
+				break;
+
+				case 'prev':
+					audioPlayer.prev();
+				break;
+
+				case 'next':
+					audioPlayer.next();
+				break;
+
+				case 'stop':
+					audioPlayer.stop();
+				break;
+			}
+		});
+	}).listen(8080);
 };
 
 $(document).ready(main);
+
+var fs = require('fs');
+function dev() {
+	win.reloadDev();
+}
+function ss(name) {
+	win.capturePage(function(img) {
+		var base64Data = img.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
+		fs.writeFile(name + ".png", base64Data, 'base64', function(err) {
+			console.log(err);
+		});
+	}, 'png');
+	console.log('snapshot taken');
+}

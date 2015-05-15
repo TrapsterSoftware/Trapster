@@ -12,6 +12,15 @@
 	<!-- // <script src="script/peer.js"></script> -->
 </head>
 <body>
+	<div class="title-bar">
+		<div class="draggable">
+			<p class="title">Trapster</p>
+		</div>
+		<div class="actions">
+			<img src="media/buttons/close.png" id="exit-app">
+		</div>
+	</div>
+<div class="page">
 	<div class="player">
 		<div class="container">
 			<div class="controls">
@@ -25,7 +34,7 @@
 				<img src="media/buttons/large.png" id="large"/>
 			</div>
 			<div class="song-title">
-				<h3>No song currently playing</h3>
+				<h4>No song currently playing</h4>
 			</div>
 			<div class="sound">
 				<!-- <img src="media/buttons/volume-down.png" id="volDown">
@@ -38,7 +47,7 @@
 		</div>
 	</div>
 	<div class="playlist">
-		<input type="search" id="musicSearch" autocomplete="off"/>
+		<input type="search" id="musicSearch" autocomplete="off" placeholder="Type in to search..."/>
 		<ul id="list">
 			<!-- <li data-index="no-index">
 				<span class="title">No song in playlist</span>
@@ -52,14 +61,14 @@
 			<img src="media/buttons/add.png" id="getMusic" >
 			<img src="media/buttons/repeat-all.png" id="repeatAll"/>
 			<img src="media/buttons/repeat-track.png" class="hide active" id="repeatTrack"/>
-			<img src="media/buttons/shuffle.png" class="" id="shuffle"/>
+			<img src="media/buttons/shuffle.png" id="shuffle"/>
 			<img src="media/buttons/stop.png" id="stop"/>
 			<img src="media/buttons/favorite-playlist.png" id="savePlaylist"/>
 			<img src="media/buttons/clear-playlist.png" id="clearPlaylist"/>
 		</div>
 		<div class="controls right">
 			<img src="media/buttons/settings.png" id="settings" /> 
-			<img src="media/buttons/dev-tools.png" id="devTools" /> 
+			<!-- <img src="media/buttons/dev-tools.png" id="devTools" />  -->
 		</div>
 	</div>
 
@@ -77,6 +86,20 @@
 							<img src="media/buttons/checkbox-unchecked.png" id="mToTrayUnchecked" class="">
 						</td>
 					</tr>
+					<tr>
+						<th>Always on top</th>
+						<td>
+							<img src="media/buttons/checkbox-checked.png" id="alwaysTopCh" class="hide">
+							<img src="media/buttons/checkbox-unchecked.png" id="alwaysTopUnch" class="">
+						</td>
+					</tr>
+					<tr>
+						<th>Show progress bar on taskbar</th>
+						<td>
+							<img src="media/buttons/checkbox-checked.png" id="progressBarCh" class="hide">
+							<img src="media/buttons/checkbox-unchecked.png" id="progressBarUnch" class="">
+						</td>
+					</tr>
 				</table>
 			</div>
 			<div class="actions">
@@ -84,6 +107,7 @@
 			</div>
 		</div>
 	</div>
+</div>
 
 	<input type="file" id="fileList" multiple accept=".mp3">
 
