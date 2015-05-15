@@ -1,6 +1,6 @@
 var gui = require('nw.gui'),
 	win = gui.Window.get(), 
-	http = require('http');;
+	http = require('http');
 
 onload = function() { win.show(); }
 
@@ -182,10 +182,10 @@ var main = function() {
 		windowResize: function(mode) {
 			switch(mode) {
 				case 'min':
-					win.setMaximumSize(484, 69);
-					win.setMinimumSize(484, 69);
+					win.setMaximumSize(484, 110);
+					win.setMinimumSize(484, 110);
 					win.width = 484;
-					win.height = 69;
+					win.height = 110;
 					win.restore();
 				break;
 
@@ -240,9 +240,16 @@ var main = function() {
 			$('.title-bar .title').text(win.title);
 		}, 
 		currentSongTitle: function() {
-			$('.song-title h4').text(currentSong.name);
-			win.title = 'Trapster' + ' - ' + currentSong.name;
-			$('.title-bar .title').text(win.title);
+			if(currentSong.name.length > 45 && currentSong.singleFile === true) {
+				var title = currentSong.name.slice(0, 45) + '...';
+				$('.song-title h4').text(title);
+				win.title = 'Trapster' + ' - ' + title;
+				$('.title-bar .title').text(win.title);
+			} else {
+				$('.song-title h4').text(currentSong.name);
+				win.title = 'Trapster' + ' - ' + currentSong.name;
+				$('.title-bar .title').text(win.title);
+			}
 		}, 
 		shuffle: function(index) {
 			if(currentSong.shuffle === true) {
@@ -268,18 +275,23 @@ var main = function() {
 			audioSeek.attr("max", parseInt(audio.duration, 10));
 		}, 
 		songLoop: function(mode) {
-			if(mode == 'track') {
-				repeatAll.addClass('hide');
-				repeatTrack.removeClass('hide');
+			if(mode === 'track') {
+				$('#repeatTrackMin').removeClass('hide');
+				$('#repeatTrack').removeClass('hide');
+				$('#repeatAllMin').addClass('hide');
+				$('#repeatAll').addClass('hide');
 				localStorage.setItem('player_loop', true);
+				currentSong.loop = true;
 				audio.loop = true;
 			} else {
-				repeatAll.removeClass('hide');
-				repeatTrack.addClass('hide');
+				$('#repeatTrackMin').addClass('hide');
+				$('#repeatTrack').addClass('hide');
+				$('#repeatAllMin').removeClass('hide');
+				$('#repeatAll').removeClass('hide');
 				localStorage.setItem('player_loop', false);
+				currentSong.loop = false;
 				audio.loop = false;
 			}
-			
 		}, 
 		play: function() {
 			playBtn.addClass('hide');
@@ -420,10 +432,12 @@ var main = function() {
 			break;
 
 			case 'repeatAll': 
+			case 'repeatAllMin': 
 				audioPlayer.songLoop('track');
 			break;
 
 			case 'repeatTrack': 
+			case 'repeatTrackMin': 
 				audioPlayer.songLoop();
 			break;
 
