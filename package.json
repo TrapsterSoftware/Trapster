@@ -1,7 +1,7 @@
 {
 	"name": "trapster",
 	"main": "app://trapster/app/index.html",
-	"version": "0.3", 
+	"version": "0.4", 
 	"single-instance": true,
 	"window": {
 		"icon": "trapster.png",
