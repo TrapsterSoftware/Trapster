@@ -83,3 +83,23 @@
 	background-color: #009688;
 }
 .player .sound .volume-control:focus {outline:none;}
+
+
+
+
+
+
+
+
+#audio-progress {
+	-webkit-appearance: none;
+	width: 100%;
+}
+#audio-progress::-webkit-progress-bar {
+	-webkit-appearance: none;
+	background-color: #009688;
+}
+#audio-progress::-webkit-progress-value {
+	-webkit-appearance: none;
+	background-color: #3F51B5;
+}
