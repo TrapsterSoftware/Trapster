@@ -9,8 +9,10 @@ Trapster audio player is a HTML5 based audio player
 * Persistent controls - volume, song loop and shuffle remains after you close the player
 
 # Coming soon #
-* Remote control - entirely control player remotely from your smartphone
 * Color changer - change the look and feel of the Trapster Audio Player
+
+# Developers #
+If you are a developer you can edit files from the `app` folder and use the `build.bat` file to compile the app
 
 # Note #
 The app is still in development and may contain bugs
