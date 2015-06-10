@@ -21,7 +21,9 @@ var main = function() {
 	var appSettings = {
 		minimizeToTray: false,
 		alwaysOnTop: false,
-		progressBar: false
+		progressBar: false,
+		autoUpdate: false,
+		updateCheckInterval: 1
 	};
 	var settingsChange = {
 		save: function() {
@@ -60,6 +62,17 @@ var main = function() {
 			} else {
 				appSettings.progressBar = true;
 				classHelper('#progressBarCh', '#progressBarUnch');
+				settingsChange.save();
+			}
+		},
+		autoUpdate: function() {
+			if(appSettings.autoUpdate === true) {
+				appSettings.autoUpdate = false;
+				classHelper('#autoUpdateUnch', '#autoUpdateCh');
+				settingsChange.save();
+			} else {
+				appSettings.autoUpdate = true;
+				classHelper('#autoUpdateCh', '#autoUpdateUnch');
 				settingsChange.save();
 			}
 		}
@@ -124,6 +137,12 @@ var main = function() {
 		} else {
 			classHelper('#progressBarUnch', '#progressBarCh');
 		}
+		if(appSettings.autoUpdate === true) {
+			classHelper('#autoUpdateCh', '#autoUpdateUnch');
+		} else {
+			classHelper('#autoUpdateUnch', '#autoUpdateCh');
+		}
+		$('#check-interval').val(appSettings.updateCheckInterval);
 
 		var loop = localStorage.getItem('player_loop');
 		var volume = localStorage.getItem('player_volume');
@@ -459,25 +478,16 @@ var main = function() {
 			break;
 
 			case 'mToTrayChecked':
-				settingsChange.minimizeToTray();
-			break;
-
 			case 'mToTrayUnchecked':
 				settingsChange.minimizeToTray();
 			break;
 
 			case 'alwaysTopCh':
-				settingsChange.alwaysOnTop();
-			break;
-
 			case 'alwaysTopUnch':
 				settingsChange.alwaysOnTop();
 			break;
 
 			case 'progressBarCh':
-				settingsChange.progressBar();
-			break;
-
 			case 'progressBarUnch':
 				settingsChange.progressBar();
 			break;
@@ -489,6 +499,15 @@ var main = function() {
 
 			case 'update':
 				update();
+			break;
+
+			case 'checkForUpdate':
+				update_check();
+			break;
+
+			case 'autoUpdateCh':
+			case 'autoUpdateUnch':
+				settingsChange.autoUpdate();
 			break;
 
 			case 'exit-app':
@@ -653,7 +672,17 @@ var main = function() {
 	});
 
 	// Checking for update
-	setInterval(update_check, 7200000);
+	$('#check-interval').on('change', function(e) {
+		e.preventDefault();
+		appSettings.updateCheckInterval = $(this).val();
+		settingsChange.save();
+	});
+	setInterval(function() {
+		update_check();
+		if(appSettings.autoUpdate === true) {
+			update();
+		}
+	}, (appSettings.updateCheckInterval * 3600) * 1000);
 
 	// Initializing some features of player
 	init();
@@ -698,6 +727,7 @@ function update_check() {
 	var tag = json.tag_name;
 	if(tag > app.manifest.version) {
 		$('#update').removeClass('hide');
+		var notification = new Notification('A newer version is available');
 	} else {
 		console.log('No update found');
 	}

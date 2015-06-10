@@ -31,7 +31,7 @@ body {
 }
 .title-bar .draggable {
 	width: 843px;
-	height: 28px; 
+	height: 28px;
 	float: left;
 	-webkit-app-region: drag;
 }
@@ -60,7 +60,7 @@ input[type=file] {display: none;}
 	background-color: rgba(0, 0, 0, 0.5);
 }
 .modal-settings .dialog {
-	width: 600px;
+	width: 800px;
 	height: 450px;
 	margin: 80px auto 0px auto;
 	background-color: #E0E0E0;
@@ -77,9 +77,42 @@ input[type=file] {display: none;}
 .modal-settings .dialog .content {
 	width: 100%;
 	height: 80%;
+	overflow: hidden;
+}
+.modal-settings .dialog .content .nav {
+	width: 15%;
+	height: 100%;
+	float: left;
+	border-right: 1px solid #009688;
+}
+.modal-settings .dialog .content .nav ul { list-style: none; }
+.modal-settings .dialog .content .nav ul li {
 	padding: 10px;
+	cursor: pointer;
+	font-size: 20px;
+}
+.modal-settings .dialog .content .nav ul li.active {
+	background-color: #009688;
+	color: #ffffff;
+}
+.modal-settings .dialog .content .nav ul li:hover {
+	background-color: #009688;
+	color: #ffffff;
+}
+.modal-settings .dialog .content .tabs {
+	width: 85%;
+	height: 100%;
+	float: left;
 	overflow-y: scroll;
 }
+.modal-settings .dialog .content .tabs select {
+	color: #ffffff;
+	font-size: 18px;
+	padding: 5px 2px;
+	-webkit-appearance: none;
+	background-color: #009688;
+}
+.modal-settings .dialog .content .tabs select:focus { outline: none; }
 .modal-settings .dialog .content table {
 	width: 100%;
 	height: auto;
@@ -98,15 +131,15 @@ input[type=file] {display: none;}
 	padding: 5px;
 	font-size: 20px;
 }
-.modal-settings .dialog .content::-webkit-scrollbar {
+.modal-settings .dialog .content .tabs::-webkit-scrollbar {
 	width: 5px;
 	-webkit-appearance: none;
 }
-.modal-settings .dialog .content::-webkit-scrollbar-track {
+.modal-settings .dialog .content .tabs::-webkit-scrollbar-track {
 	width: 5px;
 	background-color: #2196F3;
 }
-.modal-settings .dialog .content::-webkit-scrollbar-thumb {
+.modal-settings .dialog .content .tabs::-webkit-scrollbar-thumb {
 	width: 5px;
 	border-radius: 5px;
 	background-color: #ffffff;
@@ -118,13 +151,12 @@ input[type=file] {display: none;}
 	overflow: hidden;
 	border-top: 1px solid #009688;
 }
-.modal-settings .dialog .actions button {
+.modal-settings button {
 	width: auto;
 	height: auto;
 	font-size: 18px;
 	padding: 5px;
 	margin: 5px 10px;
-	float: right;
 	cursor: pointer;
 	color: #ffffff;
 	box-shadow: 0 0 5px #ffffff;
@@ -134,3 +166,5 @@ input[type=file] {display: none;}
 .modal-settings .dialog .actions button:focus {
 	outline: none;
 }
+.left { flaot: left; }
+.right { flaot: right; }

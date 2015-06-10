@@ -75,32 +75,76 @@
 				<h2>Settings</h2>
 			</section>
 			<div class="content">
-				<table>
-					<tr>
-						<th>Minimize to tray</th>
-						<td>
-							<img src="media/buttons/checkbox-checked.png" id="mToTrayChecked" class="hide">
-							<img src="media/buttons/checkbox-unchecked.png" id="mToTrayUnchecked" class="">
-						</td>
-					</tr>
-					<tr>
-						<th>Always on top</th>
-						<td>
-							<img src="media/buttons/checkbox-checked.png" id="alwaysTopCh" class="hide">
-							<img src="media/buttons/checkbox-unchecked.png" id="alwaysTopUnch" class="">
-						</td>
-					</tr>
-					<tr>
-						<th>Show progress bar on taskbar</th>
-						<td>
-							<img src="media/buttons/checkbox-checked.png" id="progressBarCh" class="hide">
-							<img src="media/buttons/checkbox-unchecked.png" id="progressBarUnch" class="">
-						</td>
-					</tr>
-				</table>
+				<div class="nav">
+					<ul>
+						<li data-tabs="general" class="active">General</li>
+						<li data-tabs="update">Update</li>
+					</ul>
+				</div>
+				<div class="tabs">
+					<div data-tab="general">
+						<table>
+							<tr>
+								<th>Minimize to tray</th>
+								<td>
+									<img src="media/buttons/checkbox-checked.png" id="mToTrayChecked" class="hide">
+									<img src="media/buttons/checkbox-unchecked.png" id="mToTrayUnchecked" class="">
+								</td>
+							</tr>
+							<tr>
+								<th>Always on top</th>
+								<td>
+									<img src="media/buttons/checkbox-checked.png" id="alwaysTopCh" class="hide">
+									<img src="media/buttons/checkbox-unchecked.png" id="alwaysTopUnch" class="">
+								</td>
+							</tr>
+							<tr>
+								<th>Show progress bar on taskbar</th>
+								<td>
+									<img src="media/buttons/checkbox-checked.png" id="progressBarCh" class="hide">
+									<img src="media/buttons/checkbox-unchecked.png" id="progressBarUnch" class="">
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div data-tab="update" class="hide">
+						<table>
+							<tr>
+								<th>Update automatically</th>
+								<td>
+									<img src="media/buttons/checkbox-checked.png" id="autoUpdateCh">
+									<img src="media/buttons/checkbox-unchecked.png" id="autoUpdateUnch">
+								</td>
+							</tr>
+							<tr>
+								<th>Check for update</th>
+								<td>
+									<button id="checkForUpdate">Check</button>
+								</td>
+							</tr>
+							<tr>
+								<th>Check interval</th>
+								<td>
+									<select id="check-interval">
+										<option value="1">1 hour</option>
+										<option value="2">2 hours</option>
+										<option value="3">3 hours</option>
+										<option value="4">4 hours</option>
+										<option value="5">5 hours</option>
+										<option value="6">6 hours</option>
+										<option value="7">7 hours</option>
+										<option value="8">8 hours</option>
+										<option value="9">9 hours</option>
+										<option value="10">10 hours</option>
+									</select>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
 			</div>
 			<div class="actions">
-				<button id="settingsClose">Close</button>
+				<button id="settingsClose" class="right">Close</button>
 			</div>
 		</div>
 	</div>
@@ -109,6 +153,7 @@
 	<input type="file" id="fileList" multiple accept=".mp3">
 
 	<script type="text/javascript" src="script/app.js"></script>
+	<script type="text/javascript" src="script/tabs.js"></script>
 
 </body>
 </html>
