@@ -1,0 +1,31 @@
+* {
+    text-align: center;
+}
+body {
+    color: #ffffff;
+    background-color: #009688;
+}
+@-webkit-keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.spinner {
+    margin-top: 10%;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50px;
+    height: 50px;
+    border-top: 6px dotted transparent;
+    border-right: 6px dotted #ECEFF1;
+    border-bottom: 6px dotted #CFD8DC;
+    border-left: 6px dotted #B0BEC5;
+    border-radius: 100%;
+    -webkit-animation: spin 400ms infinite linear;
+}
