@@ -18,6 +18,20 @@ var main = function() {
 		audioPlayer.singleFile(cmd);
 	});
 
+	var colors = {
+		frame: '#0D47A1',
+		player: '#2196F3',
+		playerText: '#ffffff',
+		playlist: '#B3E5FC',
+		playlistText: '#ffffff',
+		playlistHover: '#B3E5FC',
+		toolbar: '#2196F3',
+		actives: '#009688',
+		seeksTrack: '#009688',
+		seeksThumb: '#3F51B5',
+		scrollbarTrack: '#2196F3',
+		scrollbarThumb: '#ffffff'
+	};
 	var appSettings = {
 		minimizeToTray: false,
 		alwaysOnTop: false,
@@ -28,6 +42,36 @@ var main = function() {
 	var settingsChange = {
 		save: function() {
 			localStorage.setItem('app_settings', JSON.stringify(appSettings));
+		},
+		saveColors: function() {
+			localStorage.setItem('colors', JSON.stringify(colors));
+		},
+		getColors: function() {
+			$('input#frame-color').val(colors.frame);
+			$('input#player-color').val(colors.player);
+			$('input#player-text-color').val(colors.playerText);
+			$('input#playlist-color').val(colors.playlist);
+			$('input#playlist-text-color').val(colors.playlistText);
+			$('input#playlist-hover-color').val(colors.playlistHover);
+			$('input#toolbar-color').val(colors.toolbar);
+			$('input#actives-color').val(colors.actives);
+			$('input#seeks-track-color').val(colors.seeksTrack);
+			$('input#seeks-thumb-color').val(colors.seeksThumb);
+			$('input#scrollbar-track-color').val(colors.scrollbarTrack);
+			$('input#scrollbar-thumb-color').val(colors.scrollbarThumb);
+			$('.page, .title-bar').css('background-color', colors.frame);
+			$('.player').css('color', colors.playerText);
+			$('.player').css('background-color', colors.player);
+			$('.playlist, .playlist #musicSearch').css('color', colors.playlistText);
+			$('.playlist ul li').mouseenter(function() { $(this).css('background-color', colors.playlistHover) });
+			$('.playlist ul li').mouseleave(function() { $(this).css('background-color', colors.playlist) });
+			$('.playlist, .playlist #musicSearch').css('background-color', colors.playlist);
+			$('.toolbar').css('background-color', colors.toolbar);
+			$('.toolbar .controls img.active').css('background-color', colors.actives);
+			$('<style> .player .seek .seekbar::-webkit-slider-thumb, .player .sound .volume-control::-webkit-slider-thumb { background-color: '+colors.seeksThumb+'; }</style>').appendTo('head');
+			$('<style> .player .seek .seekbar::-webkit-slider-runnable-track, .player .sound .volume-control::-webkit-slider-runnable-track { background-color: '+colors.seeksTrack+'; }</style>').appendTo('head');
+			$('<style> .playlist::-webkit-scrollbar-thumb { background-color: '+colors.scrollbarThumb+'; }</style>').appendTo('head');
+			$('<style> .playlist::-webkit-scrollbar-track { background-color: '+colors.scrollbarTrack+'; }</style>').appendTo('head');
 		},
 		minimizeToTray: function() {
 			if(appSettings.minimizeToTray === true) {
@@ -144,6 +188,12 @@ var main = function() {
 		}
 		$('#check-interval').val(appSettings.updateCheckInterval);
 
+		if( typeof localStorage.getItem('colors') === 'object' || localStorage.getItem('colors') === '' ) {
+			localStorage.setItem('colors', JSON.stringify(colors));
+		} else {
+			colors = JSON.parse(localStorage.getItem('colors'));
+		}
+
 		var loop = localStorage.getItem('player_loop');
 		var volume = localStorage.getItem('player_volume');
 		var shuffle = localStorage.getItem('player_shuffle');
@@ -189,6 +239,8 @@ var main = function() {
 				}
 			}
 		} else {musicList = [];}
+
+		settingsChange.getColors();
 	};
 
 	var audioPlayer = {
@@ -683,6 +735,63 @@ var main = function() {
 			update();
 		}
 	}, (appSettings.updateCheckInterval * 3600) * 1000);
+
+	// Colors change
+	$('input[type=color]').on('change', function(e) {
+		e.preventDefault();
+		var id = $(this).attr('id');
+		switch (id) {
+			case 'frame-color':
+				colors.frame = $(this).val();
+			break;
+
+			case 'player-color':
+				colors.player = $(this).val();
+			break;
+
+			case 'player-text-color':
+				colors.playerText = $(this).val();
+			break;
+
+			case 'playlist-color':
+				colors.playlist = $(this).val();
+			break;
+
+			case 'playlist-text-color':
+				colors.playlistText = $(this).val();
+			break;
+
+			case 'playlist-hover-color':
+				colors.playlistHover = $(this).val();
+			break;
+
+			case 'toolbar-color':
+				colors.toolbar = $(this).val();
+			break;
+
+			case 'actives-color':
+				colors.actives = $(this).val();
+			break;
+
+			case 'seeks-thumb-color':
+				colors.seeksThumb = $(this).val();
+			break;
+
+			case 'seeks-track-color':
+				colors.seeksTrack = $(this).val();
+			break;
+
+			case 'scrollbar-thumb-color':
+				colors.scrollbarThumb = $(this).val();
+			break;
+
+			case 'scrollbar-track-color':
+				colors.scrollbarTrack = $(this).val();
+			break;
+		}
+		settingsChange.saveColors();
+		settingsChange.getColors();
+	});
 
 	// Initializing some features of player
 	init();

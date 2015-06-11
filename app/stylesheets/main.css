@@ -168,3 +168,10 @@ input[type=file] {display: none;}
 }
 .left { flaot: left; }
 .right { flaot: right; }
+
+input[type=color] {
+	width: 100px;
+	height: 30px;
+	background-color: #E0E0E0;
+	border: 1px solid black;
+}
