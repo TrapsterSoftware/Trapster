@@ -241,6 +241,9 @@ var main = function() {
 		} else {musicList = [];}
 
 		settingsChange.getColors();
+
+		// Show version on settngs panel
+		$('span.version').text(app.manifest.version);
 	};
 
 	var audioPlayer = {
